@@ -4,19 +4,9 @@ import { Box } from 'components/Box';
  import { Button } from '../ContactForm/ContactForm.styled';
 
 class ContactList extends Component {
-
-filterContactByName = () => {
-    const { filter, contacts } = this.props;
-
-    const adjustedFilter = filter.toLocaleLowerCase();
-
-    return contacts.filter(({ name }) =>
-        name.toLocaleLowerCase().includes(adjustedFilter));
-};
     
     render() {
-        const filteredContacts = this.filterContactByName();
-
+        const { contacts, OnDeleteContact } = this.props;
         return (
             <Box
                 as="ul"
@@ -25,12 +15,12 @@ filterContactByName = () => {
                 p={4}
                 alignItems="center"
             >
-            {filteredContacts.map((({ id, name, number }) => {
+            {contacts.map((({ id, name, number }) => {
                 return (
                     <li key={id}>
                         {name}: {number}
                         <Button onClick={() =>
-                            this.props.OnDeleteContact(id)
+                            OnDeleteContact(id)
                         }>Удалить</Button>
                     </li>
                 
@@ -42,9 +32,14 @@ filterContactByName = () => {
 
     
 ContactList.propTypes = {
-    filter: PropTypes.string.isRequired,
     OnDeleteContact: PropTypes.func.isRequired,
-    contacts: PropTypes.array.isRequired,
+    contacts: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            number: PropTypes.string.isRequired,
+        }),
+    ),
 };
 
 export default ContactList;
